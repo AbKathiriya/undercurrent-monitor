@@ -27,7 +27,7 @@ Private-credit gates, auto delinquencies, office CMBS, bankruptcies and earnings
 
 - **CI** (`.github/workflows/ci.yml`): every push and PR runs static checks (`npm run check`) and unit tests (`npm test`).
 - **Deploy**: Vercel's GitHub integration deploys `main` to production and every PR to a preview URL.
-- **Live data health** (`.github/workflows/health.yml`): weekdays after the close, calls the production API and fails if the reading errors, is stuck on an old session, or is missing inputs. GitHub emails you on failure. Live at https://undercurrent-monitor-pgsd.vercel.app. Set the repo variable `SITE_URL` if the domain changes.
+- **Live data health** (`.github/workflows/health.yml`): weekdays after the close, calls the production API and fails if the reading errors, is stuck on an old session, or is missing inputs. GitHub emails you on failure. Live at https://undercurrent-monitor.vercel.app. Set the repo variable `SITE_URL` if the domain changes.
 
 ## Local development
 

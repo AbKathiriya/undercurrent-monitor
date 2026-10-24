@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      SITE_URL: ${{ vars.SITE_URL || 'https://undercurrent-monitor-pgsd.vercel.app' }}
+      SITE_URL: ${{ vars.SITE_URL || 'https://undercurrent-monitor.vercel.app' }}
     steps:
       - name: Fetch /api/snapshot
         run: |
