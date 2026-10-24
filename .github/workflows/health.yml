@@ -1,0 +1,41 @@
+name: Live data health
+
+# Runs after the US close. Fails (and GitHub emails you) if the live site
+# can't build a reading, is stuck on an old session, or is missing inputs.
+on:
+  schedule:
+    - cron: "45 21 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE_URL: ${{ vars.SITE_URL || 'https://undercurrent-monitor.vercel.app' }}
+    steps:
+      - name: Fetch /api/snapshot
+        run: |
+          curl -sS --fail-with-body --retry 2 --retry-delay 20 -m 90 "$SITE_URL/api/snapshot" -o snap.json
+          echo "Score inputs as of: $(jq -r .sessionDate snap.json)"
+      - name: Validate reading
+        run: |
+          ok=$(jq -r .ok snap.json)
+          session=$(jq -r .sessionDate snap.json)
+          partial=$(jq -r '.partial | join(", ")' snap.json)
+          today=$(TZ=America/New_York date +%F)
+          if [ "$ok" != "true" ]; then echo "::error::API returned an error: $(jq -r .error snap.json)"; exit 1; fi
+          if [ "$session" != "$today" ]; then
+            echo "::warning::Latest session is $session, not $today. Expected on market holidays; otherwise Yahoo Finance may be stale."
+            dow=$(TZ=America/New_York date +%u)
+            age=$(( ( $(date -d "$today" +%s) - $(date -d "$session" +%s) ) / 86400 ))
+            if [ "$age" -gt 4 ]; then echo "::error::Prices are $age days old."; exit 1; fi
+          fi
+          if [ -n "$partial" ]; then echo "::error::Missing inputs: $partial"; exit 1; fi
+          echo "OK: session $session, generated $(jq -r .generatedAt snap.json)"
+      - name: Check backtest endpoint
+        run: |
+          curl -sS --fail-with-body -m 90 "$SITE_URL/api/backtest" | jq -e '.ok == true and (.weeks | length) > 800' > /dev/null

@@ -1,0 +1,49 @@
+{
+  "_readme": "Hand-maintained slow-macro inputs with no free API. Edit, commit, and Vercel redeploys. status: green | amber | red. 'updated' is when you last checked; entries older than max_age_days show as stale. Bank failures are pulled automatically from the FDIC.",
+  "_updated": "2026-10-07",
+  "private_credit": {
+    "status": "red",
+    "value": "Gated",
+    "note": "Blue Owl, Apollo, Ares, BlackRock and others capped withdrawals; ~$4.6B trapped as of March, Q2 requests ran 17–38% at some funds",
+    "asof": "Jul 2026",
+    "updated": "2026-10-07",
+    "max_age_days": 100,
+    "source": "https://news.bloomberglaw.com/banking-law/private-credit-funds-trap-5-billion-as-investors-rush-for-exit"
+  },
+  "auto": {
+    "status": "amber",
+    "value": "3.00% flow",
+    "note": "NY Fed: flow into 90+ day delinquency 3.00%; serious delinquency highest since 2010",
+    "asof": "Q2 2026",
+    "updated": "2026-10-07",
+    "max_age_days": 100,
+    "source": "https://www.newyorkfed.org/newsevents/news/research/2026/20260811"
+  },
+  "cre": {
+    "status": "red",
+    "value": "12.00%",
+    "note": "Trepp office CMBS delinquency (overall 7.85%); peak was 12.34% in Jan",
+    "asof": "Aug 2026",
+    "updated": "2026-10-07",
+    "max_age_days": 45,
+    "source": "https://www.credaily.com/?p=222275"
+  },
+  "bankruptcies": {
+    "status": "red",
+    "value": "372 H1",
+    "note": "S&P Global: large US filings, most since 2010; small-business filings +50% y/y",
+    "asof": "H1 2026",
+    "updated": "2026-10-07",
+    "max_age_days": 60,
+    "source": "https://www.cfodive.com/news/us-corporate-bankruptcies-hover-16-year-high-sp/825121"
+  },
+  "earnings": {
+    "status": "green",
+    "value": "+1.4%",
+    "note": "FactSet: Q3 EPS estimates rose during the quarter vs a usual 2–2.5% cut; Q3 growth seen at 29.5%",
+    "asof": "Oct 2 2026",
+    "updated": "2026-10-07",
+    "max_age_days": 45,
+    "source": "https://insight.factset.com/sp-500-earnings-season-preview-q3-2026"
+  }
+}

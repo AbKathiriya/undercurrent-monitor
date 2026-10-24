@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Undercurrent Monitor</title>
+<meta name="description" content="Daily crash early-warning score across credit, private credit, banks, breadth, labor and mega-cap leaders.">
+<meta name="theme-color" content="#eef0ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111618" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314191d'/%3E%3Cpath d='M4 20c4-6 8 2 12-4s8 2 12-4' stroke='%23ef7a6c' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Crash early-warning · what's breaking underneath</div>
+      <h1>Undercurrent Monitor</h1>
+    </div>
+    <div class="row start">
+      <span id="session" class="pill">Loading…</span>
+      <button id="refresh" type="button" class="ghost">Refresh</button>
+    </div>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <section id="loading" class="empty">Pulling prices, spreads and jobs data…</section>
+
+  <section id="main" hidden>
+    <div class="panel verdict">
+      <div>
+        <div class="eyebrow" id="asof"></div>
+        <div class="score"><span class="big num" id="comp">–</span><span class="muted">/ 100 stress</span><span class="regime" id="regime"></span></div>
+        <div class="gauge" aria-hidden="true">
+          <span class="g0"></span><span class="g1"></span><span class="g2"></span><span class="g3"></span>
+          <i class="marker" id="marker"></i>
+        </div>
+        <div class="gscale"><span>Calm</span><span>Watch</span><span>Stress building</span><span>Breaking</span></div>
+        <p class="note" id="note"></p>
+      </div>
+      <div class="idx">
+        <div class="eyebrow">Index vs. your drawdown plan</div>
+        <div class="idxrow"><span>S&amp;P 500</span><span class="num" id="spx"></span></div>
+        <div class="idxrow"><span>SPY vs 52-wk high</span><span class="num" id="dd"></span></div>
+        <div class="idxrow"><span>SPY vs 200-day</span><span class="num" id="vs200"></span></div>
+        <div class="ladder" id="ladder"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="row"><h2>Confirmation gates</h2><span class="muted" id="gatecount"></span></div>
+      <p class="pwhy">The score says pressure is building. These four say it has spread. Most crashes needed at least two of them before the real damage.</p>
+      <div class="gates" id="gates"></div>
+    </div>
+
+    <div>
+      <h2>Pillars</h2>
+      <div class="pillars" id="pillars"></div>
+    </div>
+
+    <div class="panel">
+      <div class="row"><h2>The last pillar: mega-cap leaders</h2><span class="muted" id="leadsum"></span></div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Name</th><th>Price</th><th>vs 50-day</th><th>vs 200-day</th><th>Off 52-wk high</th><th>Vol vs avg</th><th>State</th></tr></thead>
+        <tbody id="leaders"></tbody>
+      </table></div>
+      <p class="small" id="volnote"></p>
+    </div>
+
+    <div class="panel">
+      <div class="row"><h2>Stress score, past year</h2><span class="muted" id="histsum"></span></div>
+      <div class="legend"><span><i class="lk-score"></i>Score</span><span><i class="lk-spy"></i>SPY</span><span><i class="lk-gate"></i>2+ gates on</span></div>
+      <div id="hist" class="chart"></div>
+      <p class="small">Each day is rescored from that day's data, respecting when FRED and jobs figures were actually published. Slow macro uses today's values throughout.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="bt">
+    <div class="row">
+      <h2>Backtest since 2007</h2>
+      <div class="row start">
+        <label class="small" for="thr">Alarm at</label>
+        <select id="thr"><option>45</option><option selected>55</option><option>65</option></select>
+      </div>
+    </div>
+    <p class="pwhy">The market-based half of the score, rebuilt week by week from Yahoo Finance price history. Credit uses HYG versus Treasuries as a stand-in for spreads (FRED only serves 3 years of spread history), leaders use QQQ, and labor and slow macro are left out. It shows whether the score warned before past bear markets and how often it cried wolf.</p>
+    <div id="btmsg" class="small">Loading weekly history…</div>
+    <div id="btbody" hidden>
+      <div class="stats" id="btstats"></div>
+      <div class="legend"><span><i class="lk-spy"></i>SPY (log)</span><span><i class="lk-score"></i>Score</span><span><i class="lk-bear"></i>Bear markets (≥15%)</span><span><i class="lk-thr"></i>Alarm threshold</span></div>
+      <div id="btchart" class="chart"></div>
+      <h3>Each bear market</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Peak</th><th>Depth</th><th>SPY −10% on</th><th>First alarm</th><th>Warning</th><th>2+ gates first</th></tr></thead>
+        <tbody id="bteps"></tbody>
+      </table></div>
+      <h3>By threshold</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Alarm at</th><th>Bears warned</th><th>Median lead</th><th>Alarm spells</th><th>False alarms</th><th>Time in alarm</th><th>Avg SPY next 13 wks</th></tr></thead>
+        <tbody id="btthr"></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="row"><h2>My written plan</h2><span class="muted" id="planstat"></span></div>
+    <p class="pwhy">Decide now, while calm. When the index hits a level, you execute what's written here instead of what you feel. Saved in this browser only.</p>
+    <form id="planform" class="plan">
+      <label for="p10"><span class="lvl">S&amp;P −10%</span><span class="small" id="l10"></span><textarea id="p10" placeholder="e.g. Raise cash to 25%. Trim unprofitable tech. Keep the T-bill ladder rolling."></textarea></label>
+      <label for="p20"><span class="lvl">S&amp;P −20%</span><span class="small" id="l20"></span><textarea id="p20" placeholder="e.g. Deploy the first third of cash into quality names on the list."></textarea></label>
+      <label for="p30"><span class="lvl">S&amp;P −30%</span><span class="small" id="l30"></span><textarea id="p30" placeholder="e.g. Deploy the second third, only if HY spreads have peaked."></textarea></label>
+    </form>
+    <div class="row"><span class="small" id="planhint"></span><div class="row start"><button id="copyplan" type="button" class="ghost">Copy</button><button id="save" type="button" disabled>Save plan</button></div></div>
+  </section>
+
+  <footer class="foot">
+    <div><strong>How scoring works.</strong> Each signal scores 0 (green), 1 (amber) or 2 (red) against the thresholds shown under it. Pillar score = points earned ÷ points possible, counting only signals with data. Composite weights: credit 22, private credit 13, banks 13, breadth 13, labor 10, rates &amp; funding 10, leaders 10, slow macro 5, volatility 4.</div>
+    <div><strong>Data.</strong> Prices from Yahoo Finance (Stooq as backup), refreshed at most every 10 minutes during market hours and delayed about 15 minutes. Yields, spreads, funding, claims and jobs from <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a>. Bank failures from the <a href="https://banks.data.fdic.gov" target="_blank" rel="noopener">FDIC</a>. Slow macro is maintained by hand in <a href="https://github.com/AbKathiriya/undercurrent-monitor/blob/main/data/macro.json" target="_blank" rel="noopener">data/macro.json</a>. Not investment advice.</div>
+    <div id="sources"></div>
+  </footer>
+</div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
