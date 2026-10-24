@@ -1,5 +1,5 @@
 {
-  "_readme": "Hand-maintained slow-macro inputs with no free API. Edit, commit, and Vercel redeploys. status: green | amber | red. 'updated' is when you last checked; entries older than max_age_days show as stale. Bank failures are pulled automatically from the FDIC.",
+  "_readme": "Hand-maintained slow-macro inputs with no free API. Edit, commit, and Vercel redeploys. status: green | amber | red. 'updated' is when you last checked; entries older than max_age_days show as stale. Bank failures are pulled automatically from the FDIC. A hand-entered 'banks' entry with a higher count overrides the FDIC API (which can lag weeks) until it goes stale.",
   "_updated": "2026-10-07",
   "private_credit": {
     "status": "red",
@@ -45,5 +45,15 @@
     "updated": "2026-10-07",
     "max_age_days": 45,
     "source": "https://insight.factset.com/sp-500-earnings-season-preview-q3-2026"
+  },
+  "banks": {
+    "status": "amber",
+    "value": "6 in 2026",
+    "count": 6,
+    "note": "Hand-entered because the FDIC API lags: adds Tioga-Franklin (Aug 21) and Nano Banc ($736M, Sep 25). Most since 2023, but small: $1.43B combined assets",
+    "asof": "Sep 25 2026",
+    "updated": "2026-10-23",
+    "max_age_days": 45,
+    "source": "https://www.fdic.gov/bank-failures/failed-bank-list"
   }
 }

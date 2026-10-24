@@ -61,6 +61,7 @@ export async function GET() {
   try {
     out = buildReadings({ px, fred: fredData, macro, liveSession });
   } catch (e) {
+    console.error("snapshot failed", e);
     return json({ ok: false, error: "Couldn't compute the reading: " + e.message, partial }, 500, "public, s-maxage=60");
   }
 

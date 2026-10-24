@@ -83,6 +83,12 @@ test("macro: stale flag and FDIC bank line", () => {
   assert.equal(b.value, "2 in 2026");
   assert.equal(b.status, "green");
   assert.equal(bankMacro(Array.from({ length: 6 }, () => ({ d: "2026-01-01", assets: 1000 })), "2026").status, "amber");
+  // A fresher hand-entered count beats a lagging FDIC API; a stale or lower one doesn't.
+  const auto = bankMacro({ fails: [{ d: "2026-07-17", assets: 70000 }], indexDate: "2026-08-25" }, "2026");
+  assert.match(auto.note, /refreshed 2026-08-25/);
+  assert.equal(buildMacro({ banks: { status: "amber", count: 6, updated: "2026-10-20" } }, auto, "2026-10-23").banks.count, 6);
+  assert.equal(buildMacro({ banks: { status: "amber", count: 6, updated: "2026-01-01", max_age_days: 45 } }, auto, "2026-10-23").banks.auto, true);
+  assert.equal(buildMacro({ banks: { status: "green", count: 0, updated: "2026-10-20" } }, auto, "2026-10-23").banks.auto, true);
 });
 
 test("score helpers", () => {
